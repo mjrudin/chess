@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 class Piece
-  attr_accessor :location, :color
+  attr_accessor :location, :color, :graphic
 
   def initialize(location, color)
     @location = location
@@ -16,11 +17,6 @@ class Piece
     x_cord,y_cord = possible_move
     (0..7).include?(x_cord) && (0..7).include?(y_cord)
   end
-
-  def attack_position?
-    true
-  end
-
 end
 
 class King < Piece
@@ -39,6 +35,14 @@ class King < Piece
     #delete the initial location (user must move)
     possible_move_list.delete(@location)
     possible_move_list
+  end
+
+  def set_graphic
+    if @color == :black
+      @graphic = :♚
+    else
+      @graphic = :♔
+    end
   end
 
 end
@@ -65,6 +69,14 @@ class Queen < Piece
     possible_move_list
   end
 
+  def set_graphic
+    if @color == :black
+      @graphic = :♛
+    else
+      @graphic = :♕
+    end
+  end
+
 end
 
 class Rook < Piece
@@ -85,6 +97,15 @@ class Rook < Piece
     possible_move_list.delete(@location)
     possible_move_list
   end
+
+  def set_graphic
+    if @color == :black
+      @graphic = :♜
+    else
+      @graphic = :♖
+    end
+  end
+
 end
 
 class Bishop < Piece
@@ -107,6 +128,14 @@ class Bishop < Piece
     possible_move_list
   end
 
+  def set_graphic
+    if @color == :black
+      @graphic = :♝
+    else
+      @graphic = :♗
+    end
+  end
+
 end
 
 class Knight < Piece
@@ -126,9 +155,24 @@ class Knight < Piece
     end
     possible_move_list
   end
+
+  def set_graphic
+    if @color == :black
+      @graphic = :♞
+    else
+      @graphic = :♘
+    end
+  end
+
 end
 
 class Pawn < Piece
+
+
+  def attack_position?
+    false
+  end
+
   def possible_moves
     possible_move_list = []
     #sets x = @location[0]   y = @location[1]
@@ -152,6 +196,14 @@ class Pawn < Piece
       possible_move_list.delete_if{ |x,y| x >= x_cord }
       possible_move_list << [x_cord - 2, y_cord]
     end
-
   end
+
+  def set_graphic
+    if @color == :black
+      @graphic = :♟
+    else
+      @graphic = :♙
+    end
+  end
+
 end
