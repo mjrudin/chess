@@ -67,7 +67,6 @@ class HumanPlayer
         @board_object.move(initial_location,desired_location, @color)
         if @board_object.in_check?(@color)
           #If color's move didn't make color unchecked, undo that move
-          puts "STILL IN CHECK"
           @board_object.move_on_board(desired_location, initial_location)
         else
           break
