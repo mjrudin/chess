@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 require "./pieces"
+require "colored"
 
 class Board
   attr_accessor :board
@@ -17,21 +18,33 @@ class Board
   end
 
   def display_board
-     @board.each_with_index do |row, index|
-       displayed_board = []
-       displayed_board << "#{8-index}"
-       row.each do |piece|
-         if !piece.nil?
-           piece.set_graphic
-           displayed_board << piece.graphic
-         else
-           displayed_board << " "
-         end
-       end
-       puts displayed_board.join(" ")
-     end
-     puts "  a b c d e f g h"
-     puts "================="
+    counter = 0
+    display_array = [:white_on_red, :white_on_blue]
+
+    @board.each_with_index do |row, index|
+    displayed_board = []
+    print "#{8-index} "
+
+    row.each do |piece|
+      if !piece.nil?
+        piece.set_graphic
+        displayed_board << (" " + piece.graphic.to_s).method(display_array[counter]).call
+      else
+        displayed_board << "  ".method(display_array[counter]).call
+      end
+      counter = (counter + 1)%2
+    end
+    #puts displayed_board.join(" ".method(display_array[counter = (counter + 1)%2]).call)
+
+      displayed_board.each do |el|
+        print el + " ".method(display_array[counter]).call
+        counter = (counter + 1)%2
+      end
+      counter = (counter + 1)%2
+      puts
+    end
+    puts "  a b c d e f g h"
+    puts "================="
   end
 
   def move(current_location, desired_location, color)

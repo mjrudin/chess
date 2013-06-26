@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+require "colored"
 class Piece
   attr_accessor :location, :color, :graphic
 
