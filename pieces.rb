@@ -176,16 +176,17 @@ class Pawn < Piece
   end
 
 
-  def add_attack_moves(possible_move_list)
+  def get_attack_moves
+    attack_moves = []
     row_direction = @color == :black ? 1 : -1
     x_cord,y_cord = @location
     [-1,1].each do |j|
       diagonal_position = @board[x_cord + row_direction][y_cord+j]
       if !diagonal_position.nil? && diagonal_position.color != @color
-        possible_move_list << [x_cord + row_direction, y_cord+j]
+        attack_moves << [x_cord + row_direction, y_cord+j]
       end
     end
-    possible_move_list
+    attack_moves
   end
 
   def possible_moves
@@ -209,7 +210,7 @@ class Pawn < Piece
       possible_move_list << [x_cord - 2, y_cord] if x_cord == 6
     end
 
-    add_attack_moves(possible_move_list)
+    possible_move_list += get_attack_moves
     possible_move_list
   end
 
