@@ -1,6 +1,4 @@
-#TODO: Knights need to jump pieces, pawns could only move two if initial move.
-# -In pieces.rb/Pawn...implement attack position so pawns can move diagonal only
-#  when there is an enemy piece present
+#TODO:
 # -'Check' means the kings position on the board is a valid_move for an enemy     piece |  valid_move(any enemy piece location, kings_location)
 #    -if 'check' == true, then user is only allowed to move king
 # -Checkmate calls on check. If check && no_valid_moves_remain, GAME OVER!
@@ -44,20 +42,44 @@ class Board
   end
 
   def move(current_location, desired_location)
-    x1, y1 = current_location
     x2, y2 = desired_location
-    if valid_move?(current_location, desired_location)
-      @board[x1][y1].location = [x2,y2]
-      @board[x2][y2] = @board[x1][y1]
-      @board[x1][y1] = nil
+    if is_a_knight?(current_location)
+      if @board[x2][y2].nil? || enemy_piece?(current_location, desired_location)
+        move_knight(current_location, desired_location)
+      end
+    elsif valid_move?(current_location, desired_location)
+      move_on_board(current_location, desired_location)
     end
   end
 
 
   #private
 
-  def enemy_piece?
-    false
+  def move_on_board(current_location, desired_location)
+    x1, y1 = current_location
+    x2, y2 = desired_location
+    #tells piece its new position
+    @board[x1][y1].location = [x2,y2]
+    @board[x2][y2] = @board[x1][y1]
+    @board[x1][y1] = nil
+  end
+
+  def is_a_knight?(current_location)
+    x1,y1 = current_location
+    @board[x1][y1].is_a?(Knight)
+  end
+
+  def move_knight(current_location, desired_location)
+    x1, y1 = current_location
+    if @board[x1][y1].possible_moves.include?(desired_location)
+      move_on_board(current_location, desired_location)
+    end
+  end
+
+  def enemy_piece?(current_location, desired_location)
+    x1,y1 = current_location
+    x2,y2 = desired_location
+    @board[x1][y1].color != @board[x2][y2].color
   end
 
   def valid_move?(current_location, desired_location)
@@ -82,7 +104,7 @@ class Board
       elsif [tempx, tempy] == desired_location
         #We found a piece, but now we check whether our location
         #was the final one. If so, then we capture it
-        return enemy_piece? ? true : false
+        return enemy_piece?(current_location, desired_location)
       else
         #INVALID MOVE, PROMPT USER AGAIN because something is blocking move
         return false
@@ -94,7 +116,7 @@ class Board
   def setup_pawns
     [[1,:black],[6,:white]].each do |i, color|
       8.times do |j|
-        @board[i][j] = Pawn.new([i,j],color)
+        @board[i][j] = Pawn.new([i,j],color, @board)
       end
     end
   end
@@ -114,5 +136,9 @@ end
 game = Board.new
 game.setup_board
 game.display_board
-game.move([6,0],[5,1])
+game.move([7,1],[5,2])
+game.display_board
+game.move([1,3],[3,3])
+game.display_board
+game.move([5,2],[3,3])
 game.display_board
